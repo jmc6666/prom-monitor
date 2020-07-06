@@ -10,14 +10,8 @@
 # 获取软件安装包
 git clone git@git.leaniot.cn:product/monitor.git
 
-# 切换分支
-git checkout alone-monitor
-
-#创建docker网络
-docker network create monitor
-
-# 进入部署目录
-cd monitor
+# 进入部署目录并创建docker网络
+cd monitor && docker network create monitor
 
 # 启动部署脚本
 bash deploy.sh [ 环境 主机IP 主机名 ]
