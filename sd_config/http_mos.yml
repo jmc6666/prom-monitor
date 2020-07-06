@@ -1,0 +1,45 @@
+- targets: ['http://192.168.1.79:80']
+  labels:
+    env: '高河测试'
+    nodename: 'gaohe-test2'
+    service: 'frontend_mos'          
+- targets: ['http://192.168.1.79:82']
+  labels:
+    env: '高河测试'
+    nodename: 'gaohe-test2'
+    service: 'frontend_dc'          
+- targets: ['http://192.168.1.79:8001']
+  labels:
+    env: '高河测试'
+    nodename: 'gaohe-test2'
+    service: 'config-data'          
+- targets: ['http://192.168.1.79:15672']
+  labels:
+    env: '高河测试'
+    nodename: 'gaohe-test2'
+    service: 'rabbitmq'          
+- targets: ['http://192.168.1.79:1880/admin/']
+  labels:
+    env: '高河测试'
+    nodename: 'gaohe-test2'
+    service: 'rednode'          
+- targets: ['http://192.168.1.79:50004']
+  labels:
+    env: '高河测试'
+    nodename: 'gaohe-test2'
+    service: 'gisserver_frontend'          
+- targets: ['http://192.168.1.79:4001']
+  labels:
+    env: '高河测试'
+    nodename: 'gaohe-test2'
+    service: 'cloud_functions'          
+- targets: ['http://192.168.1.79:9999/healthz']
+  labels:
+    env: '高河测试'
+    nodename: 'gaohe-test2'
+    service: 'hasura_mos'          
+- targets: ['http://192.168.1.79:9910/healthz']
+  labels:
+    env: '高河测试'
+    nodename: 'gaohe-test2'
+    service: 'hasura_dc'

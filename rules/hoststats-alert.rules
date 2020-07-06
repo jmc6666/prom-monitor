@@ -1,0 +1,29 @@
+groups:
+- name: hostStatsAlert
+  rules:
+  - alert: CPU报警
+    expr: sum(avg without (cpu)(irate(node_cpu_seconds_total{mode!='idle'}[5m]))) by (nodename) > 0.90
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{ $labels.nodename }} : {{ $labels.instance }} CPU 使用率过高"
+      description: "{{ $labels.nodename }} : {{ $labels.instance }} CPU 使用率高于 90% (当前值: {{ $value }})"
+  
+  - alert: 内存报警
+    expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)/node_memory_MemTotal_bytes > 0.90
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{ $labels.nodename }} : {{ $labels.instance }} 内存使用率过高"
+      description: "{{ $labels.nodename }} : {{ $labels.instance }} 内存使用率高于 90% (当前值: {{ $value }})"
+  
+  - alert: 磁盘报警
+    expr: (node_filesystem_size_bytes{fstype=~'xfs|ext4'} - node_filesystem_avail_bytes{fstype=~'xfs|ext4'})/node_filesystem_size_bytes{fstype=~'xfs|ext4'} > 0.90
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{ $labels.nodename }} : {{ $labels.instance }} : {{ $labels.mountpoint }} 分区使用率过高"
+      description: "{{ $labels.nodename }} : {{ $labels.instance }} : {{ $labels.mountpoint }} 分区使用率高90% (当前值: {{ $value }})"

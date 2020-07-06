@@ -1,0 +1,20 @@
+groups:
+- name: networkStatsAlert
+  rules:
+  - alert: http探测报警
+    expr: probe_http_status_code != 200
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{ $labels.env }}: {{ $labels.instance }}  http探测失败!"
+      description: "当前 {{ $labels.service }} 服务 http 状态码 {{ $value }} , 请检查 {{ $labels.env }} : {{ $labels.instance }} 服务状态!"
+
+  - alert: icmp探测报警
+    expr: probe_success{job="ICMP探测"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{ $labels.env }}: {{ $labels.instance }}  icmp探测失败!"
+      description: "{{ $labels.env }} {{$labels.nodename}} : {{ $labels.instance }} 无法连接, 请检查服务器网络状态!"

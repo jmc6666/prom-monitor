@@ -1,0 +1,121 @@
+version: '2'
+
+networks:
+  monitor:
+    external: true
+    
+volumes:
+  portainer_data:
+  grafana_data:
+  prometheus_data:
+  
+services:
+  grafana:
+    image: harbor.leaniot.cn/prometheus/grafana:1.0
+    container_name: grafana
+    hostname: grafana
+    restart: always
+    ports:
+      - "30000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /tmp/grafana_password
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./conf/grafana.ini:/etc/grafana/grafana.ini
+      - ./secret/grafana_password:/tmp/grafana_password
+    networks:
+      - monitor
+      
+  prometheus:
+    image: harbor.leaniot.cn/prometheus/prometheus:1.0
+    container_name: prometheus
+    user: root
+    hostname: prometheus
+    restart: always
+    ports:
+      - "39090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+      - ./conf/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./sd_config:/etc/prometheus/sd_config
+      - ./rules:/etc/prometheus/rules
+    networks:
+      - monitor
+
+  alertmanager:
+    image: harbor.leaniot.cn/prometheus/alertmanager:1.0
+    container_name: alertmanager
+    hostname: alertmanager
+    restart: always
+    ports:
+      - "39093:9093"
+    volumes:
+      - ./conf/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    networks:
+      - monitor
+  
+  alone-alert:
+    image: harbor.leaniot.cn/prometheus/alone-alert:1.0
+    container_name: alone-alert
+    hostname: alone-alert
+    restart: always
+    environment:
+      - OPTS
+      - TOKEN
+    ports:
+      - "5000:5000"
+    networks:
+      - monitor 
+
+  node-exporter:
+    image: harbor.leaniot.cn/prometheus/node-exporter:1.0
+    container_name: node-exporter
+    hostname: node-exporter
+    network_mode: host
+    pid: host
+    restart: always
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - /:/host:ro,rslave
+
+  blackbox-exporter:
+    image: harbor.leaniot.cn/prometheus/blackbox-exporter:1.0
+    container_name: blackbox-exporter
+    hostname: blackbox-exporter
+    restart: always
+    ports:
+      - "39115:9115"
+    networks:
+      - monitor
+      
+  cadvisor:
+    image: harbor.leaniot.cn/prometheus/cadvisor:1.0
+    container_name: cadvisor
+    hostname: cadvisor
+    restart: always
+    ports:
+      - "38080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - monitor
+
+  portainer:
+    image: harbor.leaniot.cn/prometheus/portainer:1.0
+    container_name: portainer
+    restart: always
+    command:
+      -H unix:///var/run/docker.sock
+      --admin-password-file /tmp/portainer_password
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+      - ./secret/portainer_password:/tmp/portainer_password
+    ports:
+      - "39000:9000"
+    networks:
+       - monitor

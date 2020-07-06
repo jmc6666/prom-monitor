@@ -1,0 +1,37 @@
+global: 
+  resolve_timeout: 5m
+  smtp_smarthost: 'smtp.exmail.qq.com:25'
+  smtp_from: 'jiangran@iiotos.com'
+  smtp_auth_username: 'jiangran@iiotos.com'
+  smtp_auth_password: 'cym5qj3HpSvrY8Lb'
+  smtp_require_tls: false
+
+inhibit_rules:
+- source_match:
+    alertname: icmp探测报警
+    severity: critical
+  target_match:
+    severity: critical
+  equal:
+    - env
+
+route:   # route用来设置报警的分发策略
+  group_by: ['cluster','alertname']  # 采用哪个标签来作为分组依据
+  group_wait: 60s   # 组告警等待时间。也就是告警产生后等待60s，如果有同组告警一起发出
+  group_interval: 60s  # 两组告警的间隔时间
+  repeat_interval: 120m  # 重复告警的间隔时间，减少相同邮件的发送频率
+  receiver: 'pro'  # 设置默认接收人
+  routes:   # 可以指定哪些组接手哪些消息
+  - receiver: 'test'
+    match_re:
+      env: 高河测试
+
+receivers:
+- name: 'pro'
+  webhook_configs:
+  - url: http://flask-alert:5000/send/pro
+- name: 'test'
+  webhook_configs:
+  - url: http://flask-alert:5000/send/test
+
+
