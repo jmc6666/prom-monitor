@@ -1,12 +1,12 @@
 #! /bin/bash
-#By jiangran
-#Time: 2020-04-21
-#只支持CentOS7+
+# By jiangran
+# Time: 2020-07-06
+# 只支持CentOS 7+
 
 usage() {
     echo "请按如下格式执行"
-    echo "USAGE: bash $0 服务器IP 现场 服务器名"
-    echo "USAGE: bash $0 10.10.10.12 高河现场 gaohe-mos"
+    echo "USAGE: bash $0 服务器IP 环境 服务器名"
+    echo "USAGE: bash $0 10.10.10.12 测试环境 ceshi-ceshi"
     exit 1
 }
 
@@ -16,7 +16,7 @@ then
     usage
 fi
 
-# 提示
+# 安装提示
 echo -ne "\\033[0;33m"
 cat<<EOT
 prometheus监控系统安装说明：
@@ -31,7 +31,7 @@ prometheus监控系统安装说明：
         3.6 http_mos.yml http服务监控
         注： http服务监控较多，可以按照不同主机或者业务拆分成多个yml文件，拆分格式http_xxx.yml
     4. 如果需要监控windows机器需要进行额外安装
-    5. 欢迎使用华夏天信prometheus监控系统
+    5. 欢迎使用prometheus监控系统
 EOT
 echo -ne "\\033[m"
 
@@ -79,19 +79,18 @@ green_echo ()    { echo -e "\033[032;1m$@\033[0m"; }
 yellow_echo ()   { echo -e "\033[033;1m$@\033[0m"; }
 blue_echo ()     { echo -e "\033[034;1m$@\033[0m"; }
 
+# 创建 docker 网络
 NET_NAME=monitor
-
-# net add
 net_flag=`docker network ls | grep -w $NET_NAME | wc -l`
 if [ $NET_NAME -eq 0 ]; then
     docker network create $NET_NAME
 fi
 
-#校验IP
-MONI_IP=$1
+# 校验IP合法性
+MONI_IP=$2
 check_ip $MONI_IP
 
-MINENAME=$2
+MINENAME=$1
 HOSTNAME=$3
 
 # =============== 修改配置文件 ===============

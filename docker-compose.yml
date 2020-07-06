@@ -11,7 +11,7 @@ volumes:
   
 services:
   grafana:
-    image: harbor.leaniot.cn/prometheus/grafana:1.0
+    image: grafana/grafana
     container_name: grafana
     hostname: grafana
     restart: always
@@ -27,7 +27,7 @@ services:
       - monitor
       
   prometheus:
-    image: harbor.leaniot.cn/prometheus/prometheus:1.0
+    image: prom/prometheus
     container_name: prometheus
     user: root
     hostname: prometheus
@@ -43,7 +43,7 @@ services:
       - monitor
 
   alertmanager:
-    image: harbor.leaniot.cn/prometheus/alertmanager:1.0
+    image: prom/alertmanager
     container_name: alertmanager
     hostname: alertmanager
     restart: always
@@ -55,7 +55,7 @@ services:
       - monitor
   
   alone-alert:
-    image: harbor.leaniot.cn/prometheus/alone-alert:1.0
+    build: ./alone-alert
     container_name: alone-alert
     hostname: alone-alert
     restart: always
@@ -68,7 +68,7 @@ services:
       - monitor 
 
   node-exporter:
-    image: harbor.leaniot.cn/prometheus/node-exporter:1.0
+    image: prom/node-exporter
     container_name: node-exporter
     hostname: node-exporter
     network_mode: host
@@ -80,7 +80,7 @@ services:
       - /:/host:ro,rslave
 
   blackbox-exporter:
-    image: harbor.leaniot.cn/prometheus/blackbox-exporter:1.0
+    image: prom/blackbox-exporter
     container_name: blackbox-exporter
     hostname: blackbox-exporter
     restart: always
@@ -90,7 +90,7 @@ services:
       - monitor
       
   cadvisor:
-    image: harbor.leaniot.cn/prometheus/cadvisor:1.0
+    image: google/cadvisor
     container_name: cadvisor
     hostname: cadvisor
     restart: always
@@ -105,7 +105,7 @@ services:
       - monitor
 
   portainer:
-    image: harbor.leaniot.cn/prometheus/portainer:1.0
+    image: portainer/portainer
     container_name: portainer
     restart: always
     command:

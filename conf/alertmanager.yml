@@ -6,6 +6,7 @@ global:
   smtp_auth_password: 'cym5qj3HpSvrY8Lb'
   smtp_require_tls: false
 
+# 报警抑制
 inhibit_rules:
 - source_match:
     alertname: icmp探测报警
@@ -22,16 +23,13 @@ route:   # route用来设置报警的分发策略
   repeat_interval: 120m  # 重复告警的间隔时间，减少相同邮件的发送频率
   receiver: 'pro'  # 设置默认接收人
   routes:   # 可以指定哪些组接手哪些消息
-  - receiver: 'test'
+  - receiver: 'pro'
     match_re:
-      env: 高河测试
+      env: '高河测试'
 
 receivers:
 - name: 'pro'
   webhook_configs:
   - url: http://flask-alert:5000/send/pro
-- name: 'test'
-  webhook_configs:
-  - url: http://flask-alert:5000/send/test
 
 

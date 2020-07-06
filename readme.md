@@ -20,7 +20,7 @@ docker network create monitor
 cd monitor
 
 # 启动部署脚本
-bash deploy.sh [ 服务器IP 矿名 服务器名 ]
+bash deploy.sh [ 环境 主机IP 主机名 ]
 ```
 
 ### 3. 说明
@@ -35,11 +35,11 @@ bash deploy.sh [ 服务器IP 矿名 服务器名 ]
 
 - alone-alert：钉钉报警
 
-- node_exporter：主机监控
+- node-exporter：主机监控
 
 - cadvisor：容器监控
 
-- blackbox_exporter：网络监控
+- blackbox-exporter：网络监控
 
 - portainer：容器管理
 
@@ -57,6 +57,7 @@ bash deploy.sh [ 服务器IP 矿名 服务器名 ]
 
 ```
 monitor/
+├── alone-alert                         // 钉钉报警webhook服务目录
 ├── conf
 │   ├── alertmanager.yml				// alertmanager报警配置
 │   ├── grafana.ini						// grafana配置
