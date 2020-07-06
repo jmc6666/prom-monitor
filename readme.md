@@ -7,15 +7,15 @@
 ### 2. 安装步骤
 
 ```shell
-1. 获取软件安装包
+# 获取软件安装包
 git clone git@git.leaniot.cn:product/monitor.git
 
-2. 进入部署目录并创建docker网络
+# 进入部署目录并创建docker网络
 cd monitor && docker network create monitor
 
-3. 修改.env文件填写正确报警信息
+# 修改.env文件填写正确报警信息
 
-4. 启动部署脚本
+# 启动部署脚本
 bash deploy.sh [ 环境 主机IP 主机名 ]
 ```
 
